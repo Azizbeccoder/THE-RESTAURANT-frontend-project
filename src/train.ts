@@ -1,18 +1,26 @@
-function findMaxIndex(values: number[]): number {
-    if (values.length === 0) throw new Error("Array is empty");
+// function findMaxIndex(values: number[]): number {
+//     if (values.length === 0) throw new Error("Array is empty");
 
-    let maxValue = values[0];
-    let maxIndex = 0;
+//     let maxValue = values[0];
+//     let maxIndex = 0;
 
-    for (let i = 1; i < values.length; i++) {
-        if (values[i] > maxValue) {
-            maxValue = values[i];
-            maxIndex = i;
-        }
-    }
+//     for (let i = 1; i < values.length; i++) {
+//         if (values[i] > maxValue) {
+//             maxValue = values[i];
+//             maxIndex = i;
+//         }
+//     }
 
-    return maxIndex;
+//     return maxIndex;
+// }
+
+// // Example
+// console.log(findMaxIndex([3, 14, 7, 10])); 
+function extractPositiveNumbers(arr: number[]): string {
+  return arr.filter(num => num > 0).join('');
 }
 
-// Example
-console.log(findMaxIndex([3, 14, 7, 10])); 
+console.log(extractPositiveNumbers([7, -3, 0, 4])); 
+console.log(extractPositiveNumbers([-5, -2, -9]));   
+console.log(extractPositiveNumbers([10, 0, 5, -1])); 
+console.log(extractPositiveNumbers([1, 2, 3]));      
