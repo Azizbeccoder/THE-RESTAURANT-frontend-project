@@ -1,10 +1,16 @@
 import express from "express";
-import memberController from "./controllers/restaurant.controller";  // use the controller
-
 const routerAdmin = express.Router();
+import restaurantController from "./controllers/restaurant.controller";
 
-routerAdmin.get("/", memberController.goHome);
-routerAdmin.get("/login", memberController.getLogin);
-routerAdmin.get("/signup", memberController.getSignup);
+routerAdmin.get("/", restaurantController.goHome);
+
+routerAdmin
+  .get("/login", restaurantController.getLogin)
+  .post("/login", restaurantController.processLogin);
+
+routerAdmin.get("/signup", restaurantController.getSignup);
+
+// POST /signup → process signup form
+routerAdmin.post("/signup", restaurantController.processSignup); 
 
 export default routerAdmin;
