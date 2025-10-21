@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan(`method :url - :response-time [:status] \n`));
 app.use(morgan(MORGAN_FORMAT));
+app.use(morgan("dev"));
 
 // Views
 app.set("views", path.join(__dirname, "views"));

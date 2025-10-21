@@ -42,9 +42,10 @@ restaurantController.processLogin = (req:Request, res:Response) => {
     }
 }; 
 
-restaurantController.processSignup = async (req: Request, res: Response) => {
+restaurantController.processSignup = async (req:Request, res:Response) => {
     try {
-        console.log("processSignup called");
+        console.log("processLogin");
+
 
         const newMember: MemberInput = req.body;
         newMember.membertype = MemberType.RESTAURANT;
@@ -52,11 +53,12 @@ restaurantController.processSignup = async (req: Request, res: Response) => {
         const memberService = new MemberService();
         const result = await memberService.processSignup(newMember);
 
-        res.status(201).json(result); // ✅ Send JSON to Postman
-    } catch (err: any) {
-        console.error("Error, processSignup", err);
-        res.status(500).json({ message: "Signup failed", error: err.message || err });
+        res.send(result);
+    } catch (err) {
+        console.log("Error, processLogin", err);
+        res.send(err);
     }
-};
+}; 
+
 
 export default restaurantController;

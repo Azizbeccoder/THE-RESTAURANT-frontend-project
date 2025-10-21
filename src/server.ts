@@ -1,17 +1,24 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import app from './app';
 
+// Ensure PORT is a number
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3003;
 
+// Connect to MongoDB
 mongoose
-    .connect(process.env.MONGO_URL as string, {})
-    .then(data => {
-        console.log("MongoDB connection succeed");
-        const PORT = process.env.PORT ?? 3003;
-        app.listen(PORT, function(){
-            console.log(`The server is running successfully on port: ${PORT}`);
-        })
-    })
-    .catch(err => console.log("ERROR on connection MongoDB", err));
+  .connect(process.env.MONGO_URL as string)
+  .then(() => {
+    console.log("MongoDB connection succeeded");
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log(`The server is running successfully on port: ${PORT}`);
+    });
+  })
+  .catch(err => {  // use the same name here
+    console.error("ERROR on connection MongoDB:", err);
+    process.exit(1); // stop the server
+  });
