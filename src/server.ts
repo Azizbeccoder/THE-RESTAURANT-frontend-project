@@ -4,21 +4,22 @@ dotenv.config();
 import mongoose from "mongoose";
 import app from './app';
 
-// Ensure PORT is a number
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3003;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3005;
 
-// Connect to MongoDB
+if (!process.env.MONGO_URL) {
+  throw new Error("MONGO_URL is not defined in .env file");
+}
+
 mongoose
-  .connect(process.env.MONGO_URL as string)
+  .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("MongoDB connection succeeded");
 
-    // Start Express server
     app.listen(PORT, () => {
       console.log(`The server is running successfully on port: ${PORT}`);
     });
   })
-  .catch(err => {  // use the same name here
+  .catch((err) => {
     console.error("ERROR on connection MongoDB:", err);
-    process.exit(1); // stop the server
+    process.exit(1);
   });

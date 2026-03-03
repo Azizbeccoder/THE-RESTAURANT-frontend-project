@@ -1,7 +1,6 @@
 {
   "name": "burak",
   "version": "1.0.0",
-  "type": "module",
   "description": "This is burak project backend",
   "main": "src/server.ts",
   "scripts": {

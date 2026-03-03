@@ -29,3 +29,9 @@ export interface MemberInput {
     memberImage?: String;
     memberPoints?: Number;    
 }
+
+// src/libs/types/member.ts
+export interface LoginInput {
+    memberNick: string;  // ✅ change from memberNIck → memberNick
+    memberPassword: string;
+}
