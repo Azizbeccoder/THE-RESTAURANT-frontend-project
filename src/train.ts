@@ -46,26 +46,39 @@
 */ 
 
 
-function majorityElement(element: number[]): Number {
-    let new_elemnt = element.sort();
-    console.log(new_elemnt);
-    let maxCount = 0;
-    let currentCount = 1;
-    let majority = new_elemnt[0];
+// function majorityElement(element: number[]): Number {
+//     let new_elemnt = element.sort();
+//     console.log(new_elemnt);
+//     let maxCount = 0;
+//     let currentCount = 1;
+//     let majority = new_elemnt[0];
 
-    for(let i = 1; i < new_elemnt.length; i++){
-        if(new_elemnt[i] === new_elemnt[i - 1]){
-            currentCount ++;
-        } else {
-            currentCount = 1;
-        }
-        if( currentCount > maxCount) {
-        maxCount = currentCount;
-        majority = new_elemnt[i];
-        }
-    };
-    return majority;
+//     for(let i = 1; i < new_elemnt.length; i++){
+//         if(new_elemnt[i] === new_elemnt[i - 1]){
+//             currentCount ++;
+//         } else {
+//             currentCount = 1;
+//         }
+//         if( currentCount > maxCount) {
+//         maxCount = currentCount;
+//         majority = new_elemnt[i];
+//         }
+//     };
+//     return majority;
+// }
+
+
+// console.log(majorityElement([1, 2, 3, 4, 5, 4, 3, 4]));
+
+var x = 100;
+
+function demo() {
+  console.log(x);
+
+  {
+    let x = 20;
+    console.log(x);
+  }
 }
 
-
-console.log(majorityElement([1, 2, 3, 4, 5, 4, 3, 4]));
+demo();

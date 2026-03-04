@@ -11,7 +11,12 @@ class MemberService {                                                // 🏗 Ser
   }
 
   public async processSignup(input: MemberInput): Promise<string> {  // 📝 Handle member signup
-    const exist = await this.memberModel.findOne({ memberNick: input.memberNick }).exec(); // 🔍 Check if nickname exists
+    const exist = await this.memberModel
+    .findOne({ memberNick: input.memberNick })
+    .limit(5)
+    .where("age")
+    .gte(20)
+    .exec(); // 🔍 Check if nickname exists
     if (exist) throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED); // ❌ Throw error if exists
 
     try {
