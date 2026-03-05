@@ -3,7 +3,7 @@ export enum Httpcode {
     CREATED = 201,
     NOT_MODIFIED = 304,
     BAD_REQUEST = 400,
-    UNAUTHORIZED = 4001,
+    UNAUTHORIZED = 401,
     FORBIDDEN = 403,
     NOT_FOUND = 404,
     INTERNAL_SERVER_ERROR = 500,
@@ -14,17 +14,19 @@ export enum Message {
     NO_DATA_FOUND = "No data is found!",
     CREATE_FAILED = "Create is failed!",
     UPDATE_FAILED = "Update is failed!",
+    NO_MEMBER_NICK = "Member nickname not found!",
+    WRONG_PASSWORD = "Password is incorrect!",
 }
 
 class Errors extends Error {
     public code: Httpcode;
     public message: Message;
 
-    constructor(statusCode: Httpcode, statusMassage: Message) {
-        super();
+    constructor(statusCode: Httpcode, statusMessage: Message) {
+        super(statusMessage);
         this.code = statusCode;
-        this.message = statusMassage;
+        this.message = statusMessage;
     }
 }
 
-export default  Errors;
+export default Errors;

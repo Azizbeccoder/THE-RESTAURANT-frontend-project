@@ -1,37 +1,35 @@
 import { ObjectId } from "mongoose";
 import { MemberStatus, MemberType } from "../enums/member.enum";
 
-
 export interface Member {
-    _id: ObjectId;
-    membertype: MemberType;
-    memberStatus: MemberStatus;
-    memberNick: String;
-    memberPhone: String;
-    memberPassword?: String;
-    memberAdress?: String;
-    memberDesc?: String;
-    memberImage?: String;
-    memberPoints: Number;  
-    createdAt: Date;
-    updatedAt: Date;
+  _id: ObjectId;
+  membertype: MemberType;
+  memberStatus: MemberStatus;
+  memberNick: string;
+  memberPhone: string;
+  memberPassword?: string;
+  memberAddress?: string;
+  memberDesc?: string;
+  memberImage?: string;
+  memberPoints: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
 
 export interface MemberInput {
-    membertype?: MemberType;
-    memberStatus?: MemberStatus;
-    memberNick: String;
-    memberPhone: String;
-    memberPassword: String;
-    memberAdress?: String;
-    memberDesc?: String;
-    memberImage?: String;
-    memberPoints?: Number;    
+  membertype?: MemberType;
+  memberStatus?: MemberStatus;
+  memberNick: string;
+  memberPhone: string;
+  memberPassword: string;
+  memberAddress?: string;
+  memberDesc?: string;
+  memberImage?: string;
+  memberPoints?: number;
 }
 
-// src/libs/types/member.ts
+// Login input
 export interface LoginInput {
-    memberNick: string;  // ✅ change from memberNIck → memberNick
-    memberPassword: string;
+  memberNick: string;
+  memberPassword: string;
 }

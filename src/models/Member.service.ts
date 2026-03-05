@@ -1,40 +1,85 @@
-import MemberModel from "../Schema/member.model";                    // 🌟 Import Mongoose model for members
-import { LoginInput, Member, MemberInput } from "../libs/types/member"; // 📦 Import TypeScript types
-import Errors, { Httpcode, Message } from "../libs/types/errors";     // ⚠️ Custom error handling
-import { MemberType } from "../libs/enums/member.enum";              // 📝 Enum for member roles (not used yet)
+import MemberModel from "../Schema/member.model";
+import { LoginInput, Member, MemberInput } from "../libs/types/member";
+import Errors, { Httpcode, Message } from "../libs/types/errors";
+import bcrypt from "bcrypt";
 
-class MemberService {                                                // 🏗 Service class for member logic
-  private readonly memberModel: typeof MemberModel;                  // 🔒 Holds the Mongoose model
+class MemberService {
+  private readonly memberModel: typeof MemberModel;
 
-  constructor() {                                                    // 🏗 Initialize the model
-    this.memberModel = MemberModel;                                   // 🔑 Assign model to property
+  constructor() {
+    this.memberModel = MemberModel;
   }
 
-  public async processSignup(input: MemberInput): Promise<string> {  // 📝 Handle member signup
-    const exist = await this.memberModel
-    .findOne({ memberNick: input.memberNick })
-    .limit(5)
-    .where("age")
-    .gte(20)
-    .exec(); // 🔍 Check if nickname exists
-    if (exist) throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED); // ❌ Throw error if exists
-
+  public async processSignup(input: MemberInput): Promise<Member> {
     try {
-      await this.memberModel.create(input);                           // ✅ Create new member
-      return "done";                                                  // 🎯 Return success
+      // check if nickname already exists
+      const exist = await this.memberModel
+        .findOne({ memberNick: input.memberNick })
+        .exec();
+
+      if (exist) {
+        throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED);
+      }
+
+      // hash password
+      const salt = await bcrypt.genSalt(10);
+      input.memberPassword = await bcrypt.hash(input.memberPassword, salt);
+
+      const result = await this.memberModel.create(input);
+
+      if (!result) {
+        throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED);
+      }
+
+      const member = result.toObject() as Member;
+
+      // hide password before returning
+      delete member.memberPassword;
+
+      return member;
     } catch (err) {
-      throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED);   // ⚠️ Catch DB errors
+      throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }
 
-  public async processLogin(input: LoginInput): Promise<Member> {    // 📝 Handle member login
-    const member = await this.memberModel.findOne({ memberNick: input.memberNick }).exec(); // 🔍 Find member by nickname
+  public async processLogin(input: LoginInput): Promise<Member> {
+    const member = await this.memberModel
+      .findOne(
+        { memberNick: input.memberNick },
+        { memberNick: 1, memberPassword: 1 }
+      )
+      .exec();
 
-    if (!member) throw new Errors(Httpcode.BAD_REQUEST, Message.CREATE_FAILED); // ❌ Throw if not found
+    if (!member) {
+      throw new Errors(Httpcode.NOT_FOUND, Message.NO_MEMBER_NICK);
+    }
 
-    console.log("member", member);                                    // 🖥 Debug log (optional)
-    return member.toObject() as Member;                                // ✅ Convert to plain object and return
+    if (!member.memberPassword) {
+      throw new Errors(Httpcode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+    }
+
+    const isMatch: boolean = await bcrypt.compare(
+      input.memberPassword,
+      member.memberPassword
+    );
+
+    if (!isMatch) {
+      throw new Errors(Httpcode.UNAUTHORIZED, Message.WRONG_PASSWORD);
+    }
+
+    const result = await this.memberModel.findById(member._id).exec();
+
+    if (!result) {
+      throw new Errors(Httpcode.NOT_FOUND, Message.NO_MEMBER_NICK);
+    }
+
+    const loginMember = result.toObject() as Member;
+
+    // hide password
+    delete loginMember.memberPassword;
+
+    return loginMember;
   }
 }
 
-export default MemberService;                                         // 📤 Export for controllers
+export default MemberService;
