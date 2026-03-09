@@ -1,32 +1,32 @@
-import {Request, Response} from 'express';
-import {T} from "../libs/types/common";
+import { Request, Response } from "express";
+import { T } from "../libs/types/common";
 
-// React
+// Restaurant Controller
 
-const memberController: T = {};
+const restaurantController: T = {};
 
-memberController.goHome = (req:Request, res:Response) => {;
-    try {
-        res.send("Home page");
-    } catch (err) {
-        console.log("Eror, goHome", err)
-    }
-};  
+restaurantController.goHome = (req: Request, res: Response) => {
+  try {
+    res.send("Home page");
+  } catch (err) {
+    console.log("Error, goHome", err);
+  }
+};
 
-memberController.getLogin = (req:Request, res:Response) => {
-    try {
-        res.send("Login page");
-    } catch (err) {
-        console.log("Eror, login", err)
-    }
-}; 
+restaurantController.getLogin = (req: Request, res: Response) => {
+  try {
+    res.send("Login page");
+  } catch (err) {
+    console.log("Error, login", err);
+  }
+};
 
-memberController.getSignUp = (req:Request, res:Response) => {
-    try {
-        res.send("Signup page");
-    } catch (err) {
-        console.log("Eror, getSign", err)
-    }
-}; 
+restaurantController.getSignUp = (req: Request, res: Response) => {
+  try {
+    res.send("Signup page");
+  } catch (err) {
+    console.log("Error, getSignUp", err);
+  }
+};
 
-export default memberController;
+export default restaurantController;
