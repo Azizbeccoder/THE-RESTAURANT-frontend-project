@@ -1,3 +1,4 @@
+
 // ============================================================
 // libs/utils/jwt.utils.ts
 // JWT Utility Functions
@@ -29,7 +30,7 @@ export const createAccessToken = (member: Member): string => {
   const payload: TokenPayload = {
     _id: member._id.toString(),
     memberNick: member.memberNick,
-    memberType: member.memberType,
+    memberType: member.membertype,
     memberStatus: member.memberStatus,
   };
 
@@ -59,7 +60,7 @@ export const setTokenCookie = (res: Response, token: string): void => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   });
 };
 
@@ -78,19 +79,18 @@ export const clearTokenCookie = (res: Response): void => {
 // ============================================================
 // Extract Token From Request
 // Supports:
-// 1. Cookie (SSR / EJS)
-// 2. Authorization Header (SPA / API)
+//   1. Cookie    → SSR / EJS pages
+//   2. Bearer    → SPA / REST API clients
 // ============================================================
 
 export const extractToken = (req: Request): string | null => {
-  // 1️⃣ Check cookies
+  // 1. Check cookie
   if (req.cookies?.token) {
     return req.cookies.token;
   }
 
-  // 2️⃣ Check Authorization header
+  // 2. Check Authorization header: "Bearer <token>"
   const authHeader = req.headers.authorization;
-
   if (authHeader && authHeader.startsWith("Bearer ")) {
     return authHeader.slice(7);
   }
