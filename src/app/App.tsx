@@ -1,45 +1,51 @@
-import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
-import HomePage  from './screens/homePage';
-import ProductsPage  from './screens/productsPage';
-import OrderPage  from './screens/orderPage';
-import  UserPage  from './screens/userPage';
-import  HomeNavbar  from './components/headers/HomeNavbar';
-import OtherNavbar  from './components/headers/OtherNavbar';
-import Footer from './components/footer';
-// import "../css/app.css"
-import "../css/navbar.css"
-import "../css/footer.css"
-import HelpPage from './screens/helpPage';
-import Test from './screens/Test';
+import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
+import { Member,  MemberSchema  } from "./members/member.model";
+import { Product, ProductSchema } from "./products/product.model";
+import { Order,   OrderSchema   } from "./orders/order.model";
 
-function App() {
-  const location = useLocation();
-  console.log(location)
-  return (
-    <>
-    {location.pathname === "/" ? <HomeNavbar/> : <OtherNavbar/>} 
-      <Switch>
-        <Route path="/products">
-          <ProductsPage />
-        </Route>
-        <Route path="/orders">
-          <OrderPage/>
-        </Route>
-        <Route path="/member-page">
-          <UserPage/>
-        </Route>
-        <Route path="/help">
-          <HelpPage/>
-        </Route>
-        <Route path="/">
-          <Test/>
-        </Route>
-      </Switch>
-      <Footer/>
-    </>
+import { MembersController  } from "./members/members.controller";
+import { ProductsController } from "./products/products.controller";
+import { OrdersController   } from "./orders/orders.controller";
+import { AuthController     } from "./auth/auth.controller";
 
-  )
-}
-export default App;
+import { MembersService  } from "./members/members.service";
+import { ProductsService } from "./products/products.service";
+import { OrdersService   } from "./orders/orders.service";
+import { AuthService     } from "./auth/auth.service";
+import { AuthGuard       } from "./auth/auth.guard";
+
+@Module({
+  imports: [
+    MongooseModule.forRoot(
+      process.env.MONGO_URI || "mongodb://localhost:27017/burak"
+    ),
+    MongooseModule.forFeature([
+      { name: Member.name,  schema: MemberSchema  },
+      { name: Product.name, schema: ProductSchema },
+      { name: Order.name,   schema: OrderSchema   },
+    ]),
+    // Serve uploaded images statically at /api/images/filename.jpg
+    ServeStaticModule.forRoot({
+      rootPath:   join(__dirname, "..", "uploads"),
+      serveRoot:  "/api/images",
+    }),
+  ],
+  controllers: [
+    AuthController,
+    MembersController,
+    ProductsController,
+    OrdersController,
+  ],
+  providers: [
+    AuthService,
+    AuthGuard,
+    MembersService,
+    ProductsService,
+    OrdersService,
+  ],
+})
+export class AppModule {}
